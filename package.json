@@ -5,6 +5,10 @@
   "main": "dist/index.js",
   "author": "Ryan L. Bell <ryan.l.bell@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kofno/maybeasy.git"
+  },
   "scripts": {
     "docs": "typedoc --out docs --theme minimal",
     "test": "ts-node node_modules/tape/bin/tape tests/**/*.ts | tap-spec"
