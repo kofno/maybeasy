@@ -6,7 +6,7 @@
   "author": "Ryan L. Bell <ryan.l.bell@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "docs": "typedoc --out docs",
+    "docs": "typedoc --out docs --theme minimal",
     "test": "ts-node node_modules/tape/bin/tape tests/**/*.ts | tap-spec"
   },
   "devDependencies": {
