@@ -1,8 +1,9 @@
 {
   "name": "maybeasy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Maybe implemented in TypeScript",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": "Ryan L. Bell <ryan.l.bell@gmail.com>",
   "license": "MIT",
   "repository": {
