@@ -1,5 +1,6 @@
+import Catamorphism from './Catamorphism';
 import Maybe from './Maybe';
-declare class Just<A> extends Maybe<A> {
+export declare class Just<A> extends Maybe<A> {
     private value;
     constructor(theValue: A);
     getOrElse(defaultValue: A): A;
@@ -7,6 +8,5 @@ declare class Just<A> extends Maybe<A> {
     andThen<B>(fn: (a: A) => Maybe<B>): Maybe<B>;
     cata<B>(matcher: Catamorphism<A, B>): B;
 }
-declare function just<A>(value: A): Just<A>;
-export { just };
+export declare function just<A>(value: A): Just<A>;
 export default Just;

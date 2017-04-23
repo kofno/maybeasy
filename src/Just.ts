@@ -1,7 +1,7 @@
 import Catamorphism from './Catamorphism';
 import Maybe from './Maybe';
 
-class Just<A> extends Maybe<A> {
+export class Just<A> extends Maybe<A> {
 
   private value: A;
 
@@ -28,7 +28,6 @@ class Just<A> extends Maybe<A> {
 
 }
 
-function just<A>(value: A) { return new Just(value); }
+export function just<A>(value: A) { return new Just(value); }
 
-export { just };
 export default Just;

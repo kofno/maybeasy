@@ -30,6 +30,7 @@ var Nothing = (function (_super) {
     };
     return Nothing;
 }(Maybe_1.default));
+exports.Nothing = Nothing;
 function nothing() { return new Nothing(); }
 exports.nothing = nothing;
 exports.default = Nothing;

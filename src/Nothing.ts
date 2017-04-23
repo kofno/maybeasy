@@ -1,7 +1,7 @@
 import Catamorphism from './Catamorphism';
 import Maybe from './Maybe';
 
-class Nothing extends Maybe<any> {
+export class Nothing extends Maybe<any> {
 
   public getOrElse(defaultValue: any) {
     return defaultValue;
@@ -21,7 +21,6 @@ class Nothing extends Maybe<any> {
 
 }
 
-function nothing() { return new Nothing(); }
+export function nothing() { return new Nothing(); }
 
-export { nothing };
 export default Nothing;
