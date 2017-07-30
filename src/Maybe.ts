@@ -5,7 +5,6 @@ import Catamorphism from './Catamorphism';
  * undefined.
  */
 abstract class Maybe<A> {
-
   /**
    * If the Maybe computation resulted in a value, return it. Else, return
    * the defaultValue.
@@ -28,7 +27,6 @@ abstract class Maybe<A> {
    * Folds over types; a switch/case for Just<A>/Nothing.
    */
   public abstract cata<B>(matcher: Catamorphism<A, B>): B;
-
 }
 
 export default Maybe;

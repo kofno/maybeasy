@@ -33,7 +33,9 @@ var Just = (function (_super) {
     return Just;
 }(Maybe_1.default));
 exports.Just = Just;
-function just(value) { return new Just(value); }
+function just(value) {
+    return new Just(value);
+}
 exports.just = just;
 exports.default = Just;
 //# sourceMappingURL=Just.js.map

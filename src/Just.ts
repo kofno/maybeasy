@@ -2,7 +2,6 @@ import Catamorphism from './Catamorphism';
 import Maybe from './Maybe';
 
 export class Just<A> extends Maybe<A> {
-
   private value: A;
 
   constructor(theValue: A) {
@@ -25,9 +24,10 @@ export class Just<A> extends Maybe<A> {
   public cata<B>(matcher: Catamorphism<A, B>): B {
     return matcher.Just(this.value);
   }
-
 }
 
-export function just<A>(value: A) { return new Just(value); }
+export function just<A>(value: A) {
+  return new Just(value);
+}
 
 export default Just;
