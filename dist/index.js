@@ -8,4 +8,11 @@ exports.Maybe = Maybe_1.default;
 var Nothing_1 = require("./Nothing");
 exports.Nothing = Nothing_1.default;
 exports.nothing = Nothing_1.nothing;
+var fromNullable = function (v) {
+    if (v) {
+        return Just_1.just(v);
+    }
+    return Nothing_1.nothing();
+};
+exports.fromNullable = fromNullable;
 //# sourceMappingURL=index.js.map
