@@ -4,10 +4,11 @@
   "jsRules": {},
   "rules": {
     "interface-name": false,
-    "max-classes-per-file": false,
+    "max-classes-per-file": [true, 50],
     "arrow-parens": [true, "ban-single-arg-parens"],
     "quotemark": [true, "single", "avoid-escape"],
-    "ordered-imports": false
+    "ordered-imports": false,
+    "object-literal-sort-keys": false
   },
   "rulesDirectory": []
 }
