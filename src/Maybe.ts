@@ -6,10 +6,16 @@ import Catamorphism from './Catamorphism';
  */
 abstract class Maybe<A> {
   /**
-   * If the Maybe computation resulted in a value, return it. Else, return
-   * the defaultValue.
+   * Returns the maybe value if it is nonempty. Otherwise returns the result
+   * of evaluating fn.
    */
-  public abstract getOrElse(defaultValue: A): A;
+  public abstract getOrElse(fn: () => A): A;
+
+  /**
+   * Returns the maybe value if it is nonempty. Otherwise returns the
+   * defaultValue.
+   */
+  public abstract getOrElseValue(defaultValue: A): A;
 
   /**
    * If there's a value, apply the function and return a new Maybe. Mapping

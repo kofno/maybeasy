@@ -1,17 +1,21 @@
 import Catamorphism from './Catamorphism';
 import Maybe from './Maybe';
 
-export class Nothing extends Maybe<any> {
-  public getOrElse(defaultValue: any) {
+export class Nothing<A> extends Maybe<A> {
+  public getOrElse(fn: () => A) {
+    return fn();
+  }
+
+  public getOrElseValue(defaultValue: A) {
     return defaultValue;
   }
 
-  public map<B>(fn: (a: any) => B): Maybe<B> {
-    return this;
+  public map<B>(fn: (a: A) => B): Maybe<B> {
+    return new Nothing<B>();
   }
 
-  public andThen<B>(fn: (a: any) => Maybe<B>): Maybe<B> {
-    return this;
+  public andThen<B>(fn: (a: A) => Maybe<B>): Maybe<B> {
+    return new Nothing<B>();
   }
 
   public cata<B>(matcher: Catamorphism<any, B>): B {
@@ -19,8 +23,6 @@ export class Nothing extends Maybe<any> {
   }
 }
 
-export function nothing() {
-  return new Nothing();
-}
+export const nothing = <A>(): Maybe<A> => new Nothing<A>();
 
 export default Nothing;

@@ -9,7 +9,11 @@ export class Just<A> extends Maybe<A> {
     this.value = theValue;
   }
 
-  public getOrElse(defaultValue: A) {
+  public getOrElse(fn: () => A) {
+    return this.value;
+  }
+
+  public getOrElseValue(defaultValue: A) {
     return this.value;
   }
 
@@ -26,8 +30,6 @@ export class Just<A> extends Maybe<A> {
   }
 }
 
-export function just<A>(value: A) {
-  return new Just(value);
-}
+export const just = <A>(value: A): Maybe<A> => new Just<A>(value);
 
 export default Just;

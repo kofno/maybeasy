@@ -3,7 +3,7 @@ import { just } from './../src/index';
 
 test('Just.getOrElse', t => {
   const result = just('foo');
-  t.equal('foo', result.getOrElse('bar'), 'Returns the Just value');
+  t.equal('foo', result.getOrElse(() => 'bar'), 'Returns the Just value');
   t.end();
 });
 
