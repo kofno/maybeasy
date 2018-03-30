@@ -11,7 +11,7 @@
     "url": "https://github.com/kofno/maybeasy.git"
   },
   "scripts": {
-    "docs": "typedoc --out docs --theme minimal",
+    "docs": "typedoc --out docs --theme minimal && touch docs/.nojekyll",
     "test": "ts-node node_modules/tape/bin/tape tests/**/*.ts | tap-spec",
     "build": "tsc",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
@@ -22,8 +22,8 @@
     "tape": "^4.6.3",
     "ts-node": "^3.3.0",
     "tslint": "^5.1.0",
-    "typedoc": "^0.5.10",
-    "typescript": "^2.4.2",
+    "typedoc": "^0.11.0",
+    "typescript": "^2.7.2",
     "semantic-release": "^8.0.3"
   }
 }

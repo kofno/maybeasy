@@ -1,5 +1,5 @@
 import * as test from 'tape';
-import { just } from './../src/index';
+import { just, isJust } from './../src/index';
 
 test('Just.getOrElse', t => {
   const result = just('foo');
@@ -22,5 +22,10 @@ test('Just.cata', t => {
     Just: v => t.pass('Just matcher ran as expected.'),
     Nothing: () => t.fail('Nothing matcher should not run'),
   });
+  t.end();
+});
+
+test('isJust', t => {
+  t.assert(isJust(just('foo')), 'Expect isJust to be true');
   t.end();
 });
