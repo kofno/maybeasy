@@ -28,11 +28,13 @@ Given a computation that may or may not return a value, we can apply logic to
 this value by mapping pure functions over the result of the computation. For
 example:
 
-    const fetchSomething = (): Maybe<number> => ...; // <-- may or may not return something
+```typescript
+const fetchSomething = (): Maybe<number> => ...; // <-- may or may not return something
 
-    const add2 = (n) => n + 2;
+const add2 = (n) => n + 2;
 
-    fetchSomething().map(add2); //
+fetchSomething().map(add2); //
+```
 
 In this example, we add2 to the number that we fetched. But if the there is no
 number -- it's Nothing -- the result of add2 is... Nothing. We won't get a
@@ -43,13 +45,17 @@ runtime error.
 Let's say that we have two computations. Both may return nothing, but one of the
 computations depends on the other.
 
-    const fetchSomething = (): Maybe<number> => ...;
+```typescript
+const fetchSomething = (): Maybe<number> => ...;
 
-    const fetchSomethingElse = (n: number): Maybe<string> => ...; // <-- also may or may not return something
+const fetchSomethingElse = (n: number): Maybe<string> => ...; // <-- also may or may not return something
+```
 
 We _could_ use a map here, as in this examples:
 
-    fetchSomething().map(fetchSomethingElse);
+```typescript
+fetchSomething().map(fetchSomethingElse);
+```
 
 The problem with this is that we will end up a maybe nested inside another maybe.
 You intuition for Arrays applies here, too; if we map over an Array with a function
@@ -60,7 +66,9 @@ To chain computations that both may return nothing, we need a different tool:
 `andThen`. We can rewrite our previous example, but just replace `map` with
 `andThen`:
 
-    fetchSomething().andThen(fetchSomethingElse);
+```typescript
+fetchSomething().andThen(fetchSomethingElse);
+```
 
 If either computation is Nothing, the result is nothing. If both computations
 succeed, then we have `Maybe<string>`.
@@ -85,7 +93,9 @@ We can, of course, chain and map all we want to create a pipeline of data proces
 At the end we can unwrap our value for consumption by humans or other systems.
 For example:
 
-    fetchSomething().map(add2).andThen(fetchSomethingElse).getOrElse('No data');
+```typescript
+fetchSomething().map(add2).andThen(fetchSomethingElse).getOrElse('No data');
+```
 
 # install
 
@@ -95,16 +105,18 @@ For example:
 
 # usage
 
-    import { just, nothing } from 'maybeasy';
+```typescript
+import { just, nothing } from 'maybeasy';
 
-    function parse(s) {
-      try {
-        return just(JSON.parse(s));
-      }
-      catch(e) {
-        return nothing();
-      }
-    }
+function parse(s) {
+  try {
+    return just(JSON.parse(s));
+  }
+  catch(e) {
+    return nothing();
+  }
+}
+```
 
 # docs
 
