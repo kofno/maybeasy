@@ -2,11 +2,8 @@ import Catamorphism from './Catamorphism';
 import Maybe from './Maybe';
 
 export class Just<A> extends Maybe<A> {
-  private value: A;
-
-  constructor(theValue: A) {
+  constructor(private value: A) {
     super();
-    this.value = theValue;
   }
 
   public getOrElse(fn: () => A) {
@@ -27,6 +24,19 @@ export class Just<A> extends Maybe<A> {
 
   public cata<B>(matcher: Catamorphism<A, B>): B {
     return matcher.Just(this.value);
+  }
+
+  public assign<K extends string, B>(
+    k: K,
+    other: Maybe<B> | ((a: A) => Maybe<B>)
+  ): Maybe<A & { [k in K]: B }> {
+    const maybe = other instanceof Maybe ? other : other(this.value);
+    return maybe.andThen(b =>
+      just({
+        ...Object(this.value),
+        [k.toString()]: b
+      })
+    );
   }
 }
 

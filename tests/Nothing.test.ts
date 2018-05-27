@@ -1,5 +1,5 @@
 import * as test from 'tape';
-import { just, nothing, isNothing } from './../src/index';
+import { isNothing, just, nothing } from './../src/index';
 
 test('Nothing.getOrElse', t => {
   const result = nothing<string>().getOrElse(() => 'foo');
@@ -20,12 +20,18 @@ test('Nothing.andThen', t => {
 test('Nothing.cata', t => {
   nothing<string>().cata({
     Just: _ => t.fail('Just branch should never run'),
-    Nothing: () => t.pass('Nothing branch executed as expected'),
+    Nothing: () => t.pass('Nothing branch executed as expected')
   });
   t.end();
 });
 
 test('isNothing', t => {
   t.assert(isNothing(nothing<string>()), 'Expected isNothing to be true');
+  t.end();
+});
+
+test('Nothing.assign', t => {
+  const assigned = nothing().assign('x', just('foo'));
+  t.assert(isNothing(assigned));
   t.end();
 });

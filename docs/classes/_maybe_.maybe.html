@@ -916,6 +916,9 @@ img { max-width: 100%; }
 					<a href="_maybe_.maybe.html#andthen" class="tsd-kind-icon">and<wbr>Then</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a href="_maybe_.maybe.html#assign" class="tsd-kind-icon">assign</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 					<a href="_maybe_.maybe.html#cata" class="tsd-kind-icon">cata</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -973,6 +976,7 @@ img { max-width: 100%; }
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_maybe_.maybe.html#andthen" class="tsd-kind-icon">and<wbr>Then</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_maybe_.maybe.html#assign" class="tsd-kind-icon">assign</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_maybe_.maybe.html#cata" class="tsd-kind-icon">cata</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_maybe_.maybe.html#getorelse" class="tsd-kind-icon">get<wbr>OrElse</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_maybe_.maybe.html#getorelsevalue" class="tsd-kind-icon">get<wbr>OrElse<wbr>Value</a></li>
@@ -994,7 +998,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/Maybe.ts#L30">Maybe.ts:30</a></li>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/Maybe.ts#L30">Maybe.ts:30</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1038,6 +1042,53 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+				<a name="assign" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> assign</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">assign&lt;K, B&gt;<span class="tsd-signature-symbol">(</span>k<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">K</span>, other<span class="tsd-signature-symbol">: </span><a href="_maybe_.maybe.html" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">B</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_maybe_.maybe.html" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/Maybe.ts#L49">Maybe.ts:49</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Encapsulates a common pattern of needing to build up an Object from
+									a series of Maybe values. This is often solved by nesting <code>andThen</code> calls
+								and then completing the chain with a call to <code>success</code>.</p>
+							</div>
+							<p>This feature was inspired (and the code lifted from) this article:
+							<a href="https://medium.com/@dhruvrajvanshi/simulating-haskells-do-notation-in-typescript-e48a9501751c">https://medium.com/@dhruvrajvanshi/simulating-haskells-do-notation-in-typescript-e48a9501751c</a></p>
+							<p>Wrapped values are converted to an Object using the Object constructor
+								before assigning. Primitives won&#39;t fail at runtime, but results may
+							be unexpected.</p>
+						</div>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h4>
+							</li>
+							<li>
+								<h4>B</h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>k: <span class="tsd-signature-type">K</span></h5>
+							</li>
+							<li>
+								<h5>other: <a href="_maybe_.maybe.html" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">B</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_maybe_.maybe.html" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">A</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 				<a name="cata" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> cata</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
@@ -1047,7 +1098,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/Maybe.ts#L35">Maybe.ts:35</a></li>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/Maybe.ts#L35">Maybe.ts:35</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1081,7 +1132,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/Maybe.ts#L12">Maybe.ts:12</a></li>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/Maybe.ts#L12">Maybe.ts:12</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1122,7 +1173,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/Maybe.ts#L18">Maybe.ts:18</a></li>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/Maybe.ts#L18">Maybe.ts:18</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1151,7 +1202,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/Maybe.ts#L24">Maybe.ts:24</a></li>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/Maybe.ts#L24">Maybe.ts:24</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">

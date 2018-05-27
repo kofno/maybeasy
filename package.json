@@ -25,5 +25,10 @@
     "typedoc": "^0.11.0",
     "typescript": "^2.7.2",
     "semantic-release": "^8.0.3"
+  },
+  "prettier": {
+    "tralingComma": "es6",
+    "printWidth": 100,
+    "singleQuote": true
   }
 }

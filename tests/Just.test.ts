@@ -1,5 +1,5 @@
 import * as test from 'tape';
-import { just, isJust } from './../src/index';
+import { isJust, just } from './../src/index';
 
 test('Just.getOrElse', t => {
   const result = just('foo');
@@ -20,12 +20,25 @@ test('Just.andThen', t => {
 test('Just.cata', t => {
   just('foo').cata({
     Just: v => t.pass('Just matcher ran as expected.'),
-    Nothing: () => t.fail('Nothing matcher should not run'),
+    Nothing: () => t.fail('Nothing matcher should not run')
   });
   t.end();
 });
 
 test('isJust', t => {
   t.assert(isJust(just('foo')), 'Expect isJust to be true');
+  t.end();
+});
+
+test('Just.assign', t => {
+  just({})
+    .assign('x', just(42))
+    .assign('y', just('a thing'))
+    .map(v => t.deepEqual(v, { x: 42, y: 'a thing' }));
+
+  just(2)
+    .assign('x', just(42))
+    .map(v => t.equal(v.x, 42));
+
   t.end();
 });

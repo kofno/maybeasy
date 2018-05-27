@@ -910,7 +910,13 @@ img { max-width: 100%; }
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+			<a href="_index_.html#emptyable" class="tsd-kind-icon">Emptyable</a>
+		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
 			<a href="_index_.html#nullable" class="tsd-kind-icon">Nullable</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+			<a href="_index_.html#fromempty" class="tsd-kind-icon">from<wbr>Empty</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
 			<a href="_index_.html#fromnullable" class="tsd-kind-icon">from<wbr>Nullable</a>
@@ -932,12 +938,14 @@ img { max-width: 100%; }
 					<section class="tsd-index-section tsd-is-not-exported">
 						<h3>Type aliases</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported"><a href="_index_.html#emptyable" class="tsd-kind-icon">Emptyable</a></li>
 							<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported"><a href="_index_.html#nullable" class="tsd-kind-icon">Nullable</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section tsd-is-not-exported">
 						<h3>Functions</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported"><a href="_index_.html#fromempty" class="tsd-kind-icon">from<wbr>Empty</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported"><a href="_index_.html#fromnullable" class="tsd-kind-icon">from<wbr>Nullable</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_index_.html#isjust" class="tsd-kind-icon">is<wbr>Just</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_index_.html#isnothing" class="tsd-kind-icon">is<wbr>Nothing</a></li>
@@ -949,18 +957,73 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 			<h2>Type aliases</h2>
 			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+				<a name="emptyable" class="tsd-anchor"></a>
+				<h3>Emptyable</h3>
+				<div class="tsd-signature tsd-kind-icon">Emptyable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/index.ts#L6">index.ts:6</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-type-declaration">
+					<h4>Type declaration</h4>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter">
+							<h5>length<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+						</li>
+					</ul>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
 				<a name="nullable" class="tsd-anchor"></a>
 				<h3>Nullable</h3>
 				<div class="tsd-signature tsd-kind-icon">Nullable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/index.ts#L5">index.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/index.ts#L5">index.ts:5</a></li>
 					</ul>
 				</aside>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 			<h2>Functions</h2>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+				<a name="fromempty" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagConst">Const</span> from<wbr>Empty</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+					<li class="tsd-signature tsd-kind-icon">from<wbr>Empty&lt;T&gt;<span class="tsd-signature-symbol">(</span>xs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/_maybe_.maybe.html" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/index.ts#L26">index.ts:26</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Converts a value that <em>may</em> be empty, such as a string or an array, to a
+									maybe. It will accept anything that responds to length.
+									If the value is has a length of 0, then Nothing is returned.
+								If the value is anything else, it is returned wrapped in a Just.</p>
+							</div>
+						</div>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>T<span class="tsd-signature-symbol">: </span><a href="_index_.html#emptyable" class="tsd-signature-type">Emptyable</a></h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>xs: <span class="tsd-signature-type">T</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../classes/_maybe_.maybe.html" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
 				<a name="fromnullable" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagConst">Const</span> from<wbr>Nullable</h3>
@@ -971,7 +1034,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/index.ts#L12">index.ts:12</a></li>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/index.ts#L13">index.ts:13</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1007,7 +1070,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/index.ts#L27">index.ts:27</a></li>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/index.ts#L37">index.ts:37</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1039,7 +1102,7 @@ maybes.<span class="hljs-built_in">filter</span>(isJust)
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/4324177/src/index.ts#L37">index.ts:37</a></li>
+								<li>Defined in <a href="https://github.com/kofno/maybeasy/blob/f30571a/src/index.ts#L47">index.ts:47</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">

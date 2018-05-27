@@ -21,6 +21,13 @@ export class Nothing<A> extends Maybe<A> {
   public cata<B>(matcher: Catamorphism<any, B>): B {
     return matcher.Nothing();
   }
+
+  public assign<K extends string, B>(
+    k: K,
+    other: Maybe<B> | ((a: A) => Maybe<B>)
+  ): Maybe<A & { [k in K]: B }> {
+    return new Nothing<A & { [k in K]: B }>();
+  }
 }
 
 export const nothing = <A>(): Maybe<A> => new Nothing<A>();

@@ -33,6 +33,23 @@ abstract class Maybe<A> {
    * Folds over types; a switch/case for Just<A>/Nothing.
    */
   public abstract cata<B>(matcher: Catamorphism<A, B>): B;
+
+  /**
+   * Encapsulates a common pattern of needing to build up an Object from
+   * a series of Maybe values. This is often solved by nesting `andThen` calls
+   * and then completing the chain with a call to `success`.
+   *
+   * This feature was inspired (and the code lifted from) this article:
+   * https://medium.com/@dhruvrajvanshi/simulating-haskells-do-notation-in-typescript-e48a9501751c
+   *
+   * Wrapped values are converted to an Object using the Object constructor
+   * before assigning. Primitives won't fail at runtime, but results may
+   * be unexpected.
+   */
+  public abstract assign<K extends string, B>(
+    k: K,
+    other: Maybe<B> | ((a: A) => Maybe<B>)
+  ): Maybe<A & { [k in K]: B }>;
 }
 
 export default Maybe;

@@ -936,48 +936,97 @@ img { max-width: 100%; }
 			<p>Given a computation that may or may not return a value, we can apply logic to
 				this value by mapping pure functions over the result of the computation. For
 			example:</p>
-			<pre><code><span class="hljs-keyword">const</span> fetchSomething = (): Maybe&lt;<span class="hljs-built_in">number</span>&gt; =&gt; ...; <span class="hljs-comment">// &lt;-- may or may not return something</span>
+			<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> fetchSomething = (): Maybe&lt;<span class="hljs-built_in">number</span>&gt; =&gt; ...; <span class="hljs-comment">// &lt;-- may or may not return something</span>
 
 <span class="hljs-keyword">const</span> add2 = <span class="hljs-function">(<span class="hljs-params">n</span>) =&gt;</span> n + <span class="hljs-number">2</span>;
 
 fetchSomething().map(add2); <span class="hljs-comment">//</span>
-</code></pre><p>In this example, we add2 to the number that we fetched. But if the there is no
+</code></pre>
+			<p>In this example, we add2 to the number that we fetched. But if the there is no
 				number -- it&#39;s Nothing -- the result of add2 is... Nothing. We won&#39;t get a
 			runtime error.</p>
 			<h2 id="chaining-the-flat-map-">chaining (the flat map)</h2>
 			<p>Let&#39;s say that we have two computations. Both may return nothing, but one of the
 			computations depends on the other.</p>
-			<pre><code><span class="hljs-keyword">const</span> fetchSomething = (): <span class="hljs-type">Maybe</span>&lt;number&gt; =&gt; ...;
+			<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> fetchSomething = (): Maybe&lt;<span class="hljs-built_in">number</span>&gt; =&gt; ...;
 
-<span class="hljs-keyword">const</span> fetchSomethingElse = (n: number): <span class="hljs-type">Maybe</span>&lt;<span class="hljs-built_in">string</span>&gt; =&gt; ...; // &lt;-- also may <span class="hljs-keyword">or</span> may <span class="hljs-keyword">not</span> <span class="hljs-keyword">return</span> something
-</code></pre><p>We <em>could</em> use a map here, as in this examples:</p>
-			<pre><code><span class="hljs-selector-tag">fetchSomething</span>()<span class="hljs-selector-class">.map</span>(fetchSomethingElse);
-</code></pre><p>The problem with this is that we will end up a maybe nested inside another maybe.
+<span class="hljs-keyword">const</span> fetchSomethingElse = (n: <span class="hljs-built_in">number</span>): Maybe&lt;<span class="hljs-built_in">string</span>&gt; =&gt; ...; <span class="hljs-comment">// &lt;-- also may or may not return something</span>
+</code></pre>
+			<p>We <em>could</em> use a map here, as in this examples:</p>
+			<pre><code class="lang-typescript">fetchSomething().map(fetchSomethingElse);
+</code></pre>
+			<p>The problem with this is that we will end up a maybe nested inside another maybe.
 				You intuition for Arrays applies here, too; if we map over an Array with a function
 				that returns an Array, we end up with an Array of Arrays. That same thinking
 			applies here; we&#39;ll end up with <code>Maybe&lt;Maybe&lt;string&gt;&gt;</code>.</p>
 			<p>To chain computations that both may return nothing, we need a different tool:
 				<code>andThen</code>. We can rewrite our previous example, but just replace <code>map</code> with
 			<code>andThen</code>:</p>
-			<pre><code><span class="hljs-selector-tag">fetchSomething</span>()<span class="hljs-selector-class">.andThen</span>(fetchSomethingElse);
-</code></pre><p>If either computation is Nothing, the result is nothing. If both computations
+			<pre><code class="lang-typescript">fetchSomething().andThen(fetchSomethingElse);
+</code></pre>
+			<p>If either computation is Nothing, the result is nothing. If both computations
 			succeed, then we have <code>Maybe&lt;string&gt;</code>.</p>
+			<h2 id="building-an-object">building an object</h2>
+			<p>A common pattern in javascript is build an object from a set of computations.
+				When those computations may or may not return a value, it can be useful to
+			chain them together using Maybe.</p>
+			<p>Given our functions, you can chain them together using <code>andThen</code>. It looks like
+			this:</p>
+			<pre><code class="lang-typescript">fetchSomething().andThen(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> fetchSomethingElse.andThen(<span class="hljs-function"><span class="hljs-params">b</span> =&gt;</span> just({ a, b })));
+</code></pre>
+			<p>If the object is fairly complex, this nesting can be quite deep.</p>
+			<pre><code class="lang-typescript">fetchSomething()
+.andThen(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span>
+  fetchSomethingElse().andThen(<span class="hljs-function"><span class="hljs-params">b</span> =&gt;</span>
+    fetchC().andThen(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span>
+      fetchD().andThen(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span>
+        fetchE().andThen(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span>
+          ({ a, b, c, d, e })
+        )
+       )
+      )
+    );
+</code></pre>
+			<p>This is barely distinguishable from callback hell. The <code>assign</code> method helps
+				flatten this out by allowing us to build an object incrementally. Here&#39;s the
+			last code example using <code>assign</code>:</p>
+			<pre><code class="lang-typescript">just({})
+  .assign(<span class="hljs-string">'a'</span>, fetchSomething())
+  .assign(<span class="hljs-string">'b'</span>, fetchSomethingElse())
+  .assign(<span class="hljs-string">'c'</span>, fetchC())
+  .assign(<span class="hljs-string">'d'</span>, fetchD())
+  .assign(<span class="hljs-string">'e'</span>, fetchE());
+</code></pre>
+			<p><code>assign</code> also accepts a function that returns a Maybe value as the second argument.
+				Use this when you need to calculate one value of the object, based on a previously
+			calculated value. For example:</p>
+			<pre><code class="lang-typescript">just({})
+  .assign(<span class="hljs-string">'a'</span>, just(<span class="hljs-number">8</span>))
+  .assign(<span class="hljs-string">'b'</span>, <span class="hljs-function"><span class="hljs-params">scope</span> =&gt;</span> just(scope.a + <span class="hljs-number">42</span>)); <span class="hljs-comment">// --&gt; Just { a: 8, b: 50 }</span>
+</code></pre>
 			<h2 id="unwrapping-the-value">unwrapping the value</h2>
 			<p>At some point, we may need to send our result to another part of the system.
 				The other part of the system may not understand Maybe values. Or possibly this
 				value needs to be serialized as a string for sending to a third party. We need
-			a safe way to <em>unwrap</em> this value. For this purpose we have <code>getOrElse</code>.</p>
-			<p><code>getOrElse</code> will return the value if it is present, but it requires us to provide
-				a default value, in the case that we have Nothing. For this case where we have
-				to send a string to another part of the system, we may call <code>getOrElse</code> with
-			and empty string, or &#39;N/A&#39;, or some other place holder text.</p>
+				a safe way to <em>unwrap</em> this value. For this purpose we have <code>getOrElse</code> and
+			<code>getOrElseValue</code>.</p>
+			<p><code>getOrElse</code> and <code>getOrElseValue</code> will return the value if it is present (a Just),
+				but also requires us to provide a default value, in the case that we have Nothing.
+				<code>getOrElseValue</code> is strict and takes a value of the generic type of the Maybe.
+				<code>getOrElse</code> is lazy. It takes a function that returns a type of the generic
+				type of the Maybe. The function will only be evaluated if the Maybe is Nothing.
+			Prefer usinf <code>getOrElse</code> if the default value is expensive to calculate.</p>
 			<p>This makes <em>unwrapping</em> the value safe.</p>
 			<h2 id="putting-it-all-together">putting it all together</h2>
 			<p>We can, of course, chain and map all we want to create a pipeline of data processors.
 				At the end we can unwrap our value for consumption by humans or other systems.
 			For example:</p>
-			<pre><code><span class="hljs-selector-tag">fetchSomething</span>()<span class="hljs-selector-class">.map</span>(add2)<span class="hljs-selector-class">.andThen</span>(fetchSomethingElse)<span class="hljs-selector-class">.getOrElse</span>(<span class="hljs-string">'No data'</span>);
-</code></pre><h1 id="install">install</h1>
+			<pre><code class="lang-typescript">fetchSomething()
+  .map(add2)
+  .andThen(fetchSomethingElse)
+  .getOrElse(<span class="hljs-string">'No data'</span>);
+</code></pre>
+			<h1 id="install">install</h1>
 			<blockquote>
 				<p>npm install --save maybeasy</p>
 			</blockquote>
@@ -985,17 +1034,17 @@ fetchSomething().map(add2); <span class="hljs-comment">//</span>
 				<p>yarn add maybeasy</p>
 			</blockquote>
 			<h1 id="usage">usage</h1>
-			<pre><code><span class="hljs-keyword">import</span> { just, nothing } <span class="hljs-keyword">from</span> <span class="hljs-string">'maybeasy'</span>;
+			<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> { just, nothing } <span class="hljs-keyword">from</span> <span class="hljs-string">'maybeasy'</span>;
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parse</span>(<span class="hljs-params">s</span>) </span>{
   <span class="hljs-keyword">try</span> {
     <span class="hljs-keyword">return</span> just(<span class="hljs-built_in">JSON</span>.parse(s));
-  }
-  <span class="hljs-keyword">catch</span>(e) {
+  } <span class="hljs-keyword">catch</span> (e) {
     <span class="hljs-keyword">return</span> nothing();
   }
 }
-</code></pre><h1 id="docs">docs</h1>
+</code></pre>
+			<h1 id="docs">docs</h1>
 			<p><a href="https://kofno.github.io/maybeasy">API</a></p>
 		</div>
 		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
