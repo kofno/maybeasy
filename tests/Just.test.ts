@@ -20,7 +20,7 @@ test('Just.andThen', t => {
 test('Just.cata', t => {
   just('foo').cata({
     Just: v => t.pass('Just matcher ran as expected.'),
-    Nothing: () => t.fail('Nothing matcher should not run')
+    Nothing: () => t.fail('Nothing matcher should not run'),
   });
   t.end();
 });
@@ -36,9 +36,20 @@ test('Just.assign', t => {
     .assign('y', just('a thing'))
     .map(v => t.deepEqual(v, { x: 42, y: 'a thing' }));
 
-  just(2)
-    .assign('x', just(42))
-    .map(v => t.equal(v.x, 42));
+  just(2).assign('x', just(42)).map(v => t.equal(v.x, 42));
+
+  t.end();
+});
+
+test('Just.do', t => {
+  just({})
+    .assign('foo', just(42))
+    .assign('bar', just('hello'))
+    .do(scope => t.deepEqual({ foo: 42, bar: 'hello' }, scope))
+    .cata({
+      Just: v => t.pass(`All is well! ${JSON.stringify(v)}`),
+      Nothing: () => t.fail('Should not be Nothing'),
+    });
 
   t.end();
 });

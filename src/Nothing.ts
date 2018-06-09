@@ -24,9 +24,13 @@ export class Nothing<A> extends Maybe<A> {
 
   public assign<K extends string, B>(
     k: K,
-    other: Maybe<B> | ((a: A) => Maybe<B>)
+    other: Maybe<B> | ((a: A) => Maybe<B>),
   ): Maybe<A & { [k in K]: B }> {
     return new Nothing<A & { [k in K]: B }>();
+  }
+
+  public do(fn: (a: A) => void): Maybe<A> {
+    return new Nothing<A>();
   }
 }
 

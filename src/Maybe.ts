@@ -48,8 +48,27 @@ abstract class Maybe<A> {
    */
   public abstract assign<K extends string, B>(
     k: K,
-    other: Maybe<B> | ((a: A) => Maybe<B>)
+    other: Maybe<B> | ((a: A) => Maybe<B>),
   ): Maybe<A & { [k in K]: B }>;
+
+  /**
+   * Inject a side-effectual operation into a chain of maybe operations.
+   *
+   * The primary use case for `do` is to perform logging in the middle of a flow
+   * of Maybe computations.
+   *
+   * The side effect only runs when there is a value (Just).
+   *
+   * The value will (should) remain unchanged during the `do` operation.
+   *
+   *    just({})
+   *      .assign('foo', just(42))
+   *      .assign('bar', just('hello'))
+   *      .do(scope => console.log('Scope: ', JSON.stringify(scope)))
+   *      .map(doSomethingElse)
+   *
+   */
+  public abstract do(fn: (a: A) => void): Maybe<A>;
 }
 
 export default Maybe;
