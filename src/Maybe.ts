@@ -30,6 +30,12 @@ abstract class Maybe<A> {
   public abstract andThen<B>(fn: (a: A) => Maybe<B>): Maybe<B>;
 
   /**
+   * Like a boolean OR. Returns the dereferenced Maybe if it is `Just`. Otherwise
+   * it returns the Maybe from the evaluated function.
+   */
+  public abstract orElse(fn: () => Maybe<A>): Maybe<A>;
+
+  /**
    * Folds over types; a switch/case for Just<A>/Nothing.
    */
   public abstract cata<B>(matcher: Catamorphism<A, B>): B;

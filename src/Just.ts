@@ -22,6 +22,10 @@ export class Just<A> extends Maybe<A> {
     return fn(this.value);
   }
 
+  public orElse(fn: () => Maybe<A>): Maybe<A> {
+    return this;
+  }
+
   public cata<B>(matcher: Catamorphism<A, B>): B {
     return matcher.Just(this.value);
   }

@@ -18,6 +18,10 @@ export class Nothing<A> extends Maybe<A> {
     return new Nothing<B>();
   }
 
+  public orElse(fn: () => Maybe<A>): Maybe<A> {
+    return fn();
+  }
+
   public cata<B>(matcher: Catamorphism<any, B>): B {
     return matcher.Nothing();
   }
