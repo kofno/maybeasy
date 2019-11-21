@@ -3,7 +3,11 @@ import { isJust, just } from './../src/index';
 
 test('Just.getOrElse', t => {
   const result = just('foo');
-  t.equal('foo', result.getOrElse(() => 'bar'), 'Returns the Just value');
+  t.equal(
+    'foo',
+    result.getOrElse(() => 'bar'),
+    'Returns the Just value'
+  );
   t.end();
 });
 
@@ -20,7 +24,7 @@ test('Just.andThen', t => {
 test('Just.cata', t => {
   just('foo').cata({
     Just: v => t.pass('Just matcher ran as expected.'),
-    Nothing: () => t.fail('Nothing matcher should not run'),
+    Nothing: () => t.fail('Nothing matcher should not run')
   });
   t.end();
 });
@@ -36,7 +40,9 @@ test('Just.assign', t => {
     .assign('y', just('a thing'))
     .map(v => t.deepEqual(v, { x: 42, y: 'a thing' }));
 
-  just(2).assign('x', just(42)).map(v => t.equal(v.x, 42));
+  just(2)
+    .assign('x', just(42))
+    .map(v => t.equal(v.x, 42));
 
   t.end();
 });
@@ -48,7 +54,18 @@ test('Just.do', t => {
     .do(scope => t.deepEqual({ foo: 42, bar: 'hello' }, scope))
     .cata({
       Just: v => t.pass(`All is well! ${JSON.stringify(v)}`),
-      Nothing: () => t.fail('Should not be Nothing'),
+      Nothing: () => t.fail('Should not be Nothing')
+    });
+
+  t.end();
+});
+
+test('Just.elseDo', t => {
+  just('foo')
+    .elseDo(() => t.fail(`'elseDo' should not run on just`))
+    .cata({
+      Just: x => t.pass(`All is well: ${JSON.stringify(x)}`),
+      Nothing: () => t.fail('Should have a value')
     });
 
   t.end();

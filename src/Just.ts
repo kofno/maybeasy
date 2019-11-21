@@ -32,18 +32,22 @@ export class Just<A> extends Maybe<A> {
 
   public assign<K extends string, B>(
     k: K,
-    other: Maybe<B> | ((a: A) => Maybe<B>),
+    other: Maybe<B> | ((a: A) => Maybe<B>)
   ): Maybe<A & { [k in K]: B }> {
     const maybe = other instanceof Maybe ? other : other(this.value);
     return maybe.map<A & { [k in K]: B }>(b => ({
       ...Object(this.value),
-      [k.toString()]: b,
+      [k.toString()]: b
     }));
   }
 
   public do(fn: (a: A) => void): Maybe<A> {
     fn(this.value);
     return new Just<A>(this.value);
+  }
+
+  public elseDo(fn: () => void): Maybe<A> {
+    return this;
   }
 }
 

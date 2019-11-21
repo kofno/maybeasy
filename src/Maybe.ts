@@ -54,7 +54,7 @@ abstract class Maybe<A> {
    */
   public abstract assign<K extends string, B>(
     k: K,
-    other: Maybe<B> | ((a: A) => Maybe<B>),
+    other: Maybe<B> | ((a: A) => Maybe<B>)
   ): Maybe<A & { [k in K]: B }>;
 
   /**
@@ -75,6 +75,19 @@ abstract class Maybe<A> {
    *
    */
   public abstract do(fn: (a: A) => void): Maybe<A>;
+
+  /**
+   * Inject a side-effectual operation into a chain of maybe operations.
+   *
+   * The side effect only runs when there is not a value (Nothing).
+   *
+   * Otherwise, `elseDo` passes the Nothing state along the call chain.
+   *
+   *    nothing()
+   *      .elseDo(() => console.log("There is nothing here"));
+   *
+   */
+  public abstract elseDo(fn: () => void): Maybe<A>;
 }
 
 export default Maybe;

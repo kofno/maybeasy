@@ -20,7 +20,7 @@ test('Nothing.andThen', t => {
 test('Nothing.cata', t => {
   nothing<string>().cata({
     Just: _ => t.fail('Just branch should never run'),
-    Nothing: () => t.pass('Nothing branch executed as expected'),
+    Nothing: () => t.pass('Nothing branch executed as expected')
   });
   t.end();
 });
@@ -37,10 +37,23 @@ test('Nothing.assign', t => {
 });
 
 test('Nothing.do', t => {
-  nothing().do(x => t.fail(`'do' should not run on nothing: ${JSON.stringify(x)}`)).cata({
-    Just: x => t.fail(`Should not have a value: ${JSON.stringify(x)}`),
-    Nothing: () => t.pass('Nothing, as expected'),
-  });
+  nothing()
+    .do(x => t.fail(`'do' should not run on nothing: ${JSON.stringify(x)}`))
+    .cata({
+      Just: x => t.fail(`Should not have a value: ${JSON.stringify(x)}`),
+      Nothing: () => t.pass('Nothing, as expected')
+    });
+
+  t.end();
+});
+
+test('Nothing.elseDo', t => {
+  nothing()
+    .elseDo(() => t.pass('elseDo happened'))
+    .cata({
+      Just: x => t.fail(`Should not have a value: ${JSON.stringify(x)}`),
+      Nothing: () => t.pass('Nothing, as expected')
+    });
 
   t.end();
 });
