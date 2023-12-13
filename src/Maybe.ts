@@ -1,4 +1,4 @@
-import Catamorphism from './Catamorphism';
+import Catamorphism from './Catamorphism.ts';
 
 /**
  * Maybe describes a value that is optional. It is safer to use then null and
@@ -22,6 +22,13 @@ abstract class Maybe<A> {
    * over Nothing returns Nothing.
    */
   public abstract map<B>(fn: (a: A) => B): Maybe<B>;
+
+  /**
+   * An alias for `map`
+   */
+  public and<B>(fn: (a: A) => B): Maybe<B> {
+    return this.map(fn);
+  }
 
   /**
    * Chain Maybe computations together. If any computation returns a Nothing,
@@ -88,6 +95,18 @@ abstract class Maybe<A> {
    *
    */
   public abstract elseDo(fn: () => void): Maybe<A>;
+
+  /**
+   * Returns true if the Maybe is a Just.
+   * @returns {boolean}
+   */
+  public abstract isJust(): boolean;
+
+  /**
+   * Returns true if the Maybe is a Nothing.
+   * @returns {boolean}
+   */
+  public abstract isNothing(): boolean;
 }
 
 export default Maybe;

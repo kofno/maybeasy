@@ -1,5 +1,5 @@
-import Catamorphism from './Catamorphism';
-import Maybe from './Maybe';
+import Catamorphism from './Catamorphism.ts';
+import Maybe from './Maybe.ts';
 
 export class Nothing<A> extends Maybe<A> {
   public getOrElse(fn: () => A) {
@@ -10,11 +10,11 @@ export class Nothing<A> extends Maybe<A> {
     return defaultValue;
   }
 
-  public map<B>(fn: (a: A) => B): Maybe<B> {
+  public map<B>(_fn: (a: A) => B): Maybe<B> {
     return new Nothing<B>();
   }
 
-  public andThen<B>(fn: (a: A) => Maybe<B>): Maybe<B> {
+  public andThen<B>(_fn: (a: A) => Maybe<B>): Maybe<B> {
     return new Nothing<B>();
   }
 
@@ -27,19 +27,27 @@ export class Nothing<A> extends Maybe<A> {
   }
 
   public assign<K extends string, B>(
-    k: K,
-    other: Maybe<B> | ((a: A) => Maybe<B>)
+    _k: K,
+    _other: Maybe<B> | ((a: A) => Maybe<B>)
   ): Maybe<A & { [k in K]: B }> {
     return new Nothing<A & { [k in K]: B }>();
   }
 
-  public do(fn: (a: A) => void): Maybe<A> {
+  public do(_fn: (a: A) => void): Maybe<A> {
     return new Nothing<A>();
   }
 
   public elseDo(fn: () => void): Maybe<A> {
     fn();
     return this;
+  }
+
+  public isJust(): boolean {
+    return false;
+  }
+
+  public isNothing(): boolean {
+    return true;
   }
 }
 

@@ -1,4 +1,4 @@
-interface Catamorphism<A, B> {
+export interface Catamorphism<A, B> {
   Just: (value: A) => B;
   Nothing: () => B;
 }

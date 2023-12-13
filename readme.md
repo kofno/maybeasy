@@ -1,6 +1,3 @@
-# Moved
-This code is now being maintained at [festive-possum](https://github.com/kofno/festive-possum/tree/main/packages/maybeasy)
-
 # maybeasy
 
 [![Build Status](https://travis-ci.org/kofno/maybeasy.svg?branch=master)](https://travis-ci.org/kofno/maybeasy)

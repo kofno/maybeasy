@@ -1,20 +1,20 @@
-import Just, { just } from './Just';
-import Maybe from './Maybe';
-import Nothing, { nothing } from './Nothing';
+import { just } from './Just.ts';
+import Maybe from './Maybe.ts';
+import { nothing } from './Nothing.ts';
 
-type Nullable = null | undefined;
-type Emptyable = { length: number };
+export type Nullable = null | undefined;
+export type Emptyable = { length: number };
 
 /**
  * Converts a value that _may_ be null or undefined to a maybe.
  * If the value is null or undefined, then Nothing is returned.
  * If the value is anything else, it is returned wrapped in a Just.
  */
-const fromNullable = <T>(v: T | Nullable): Maybe<T> => {
-  if (v) {
-    return just(v);
+export function fromNullable<T>(v: T | Nullable): Maybe<T> {
+  if (typeof v === 'undefined' || v === null) {
+    return nothing();
   }
-  return nothing();
+  return just(v);
 };
 
 /**
@@ -23,8 +23,9 @@ const fromNullable = <T>(v: T | Nullable): Maybe<T> => {
  * If the value is has a length of 0, then Nothing is returned.
  * If the value is anything else, it is returned wrapped in a Just.
  */
-const fromEmpty = <T extends Emptyable>(xs: T): Maybe<T> =>
-  xs.length === 0 ? nothing<T>() : just(xs);
+export function fromEmpty<T extends Emptyable>(xs: T): Maybe<T> {
+  return xs.length === 0 ? nothing<T>() : just(xs);
+}
 
 /**
  * Returns true if maybe is an instance of Just
@@ -34,7 +35,7 @@ const fromEmpty = <T extends Emptyable>(xs: T): Maybe<T> =>
  *     const maybes: Maybe<string>[]
  *     maybes.filter(isJust)
  */
-const isJust = (maybe: Maybe<any>): boolean => maybe instanceof Just;
+export function isJust(maybe: Maybe<unknown>): boolean { return maybe.isJust() }
 
 /**
  * Returns true if maybe is an instance of Nothing
@@ -44,18 +45,31 @@ const isJust = (maybe: Maybe<any>): boolean => maybe instanceof Just;
  *     const maybes: Maybe<string>[];
  *     maybes.filter(isNothing).length;
  */
-const isNothing = (maybe: Maybe<any>): boolean => maybe instanceof Nothing;
+export function isNothing(maybe: Maybe<unknown>): boolean { return maybe.isNothing() }
 
-export {
-  Maybe,
-  Just,
-  just,
-  Nothing,
-  nothing,
-  Nullable,
-  Emptyable,
-  fromNullable,
-  fromEmpty,
-  isJust,
-  isNothing
-};
+/**
+ * Returns the value of the maybe if it is a Just, otherwise returns the
+ * provided default value.
+ */
+export function getOrElseValue<T>(value: T): (maybe: Maybe<T>) => T;
+export function getOrElseValue<T>(value: T, maybe: Maybe<T>): T;
+export function getOrElseValue<T>(value: T, maybe?: Maybe<T>) {
+  const doit = (maybe: Maybe<T>) => maybe.getOrElseValue(value);
+  return typeof maybe === 'undefined' ? doit : doit(maybe);
+}
+
+/**
+ * Returns the value of the maybe if it is a Just, otherwise returns the
+ * result of the provided function.
+ */
+export function getOrElse<T>(fn: () => T, maybe: Maybe<T>): T;
+export function getOrElse<T>(fn: () => T): (maybe: Maybe<T>) => T;
+export function getOrElse<T>(fn: () => T, maybe?: Maybe<T>) {
+  const doit = (maybe: Maybe<T>) => maybe.getOrElse(fn);
+  return typeof maybe === 'undefined' ? doit : doit(maybe);
+}
+
+export * from './Just.ts';
+export * from './Maybe.ts';
+export * from './Nothing.ts';
+

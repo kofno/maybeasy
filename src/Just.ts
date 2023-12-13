@@ -1,16 +1,16 @@
-import Catamorphism from './Catamorphism';
-import Maybe from './Maybe';
+import Catamorphism from './Catamorphism.ts';
+import Maybe from './Maybe.ts';
 
 export class Just<A> extends Maybe<A> {
   constructor(private value: A) {
     super();
   }
 
-  public getOrElse(fn: () => A) {
+  public getOrElse(_fn: () => A) {
     return this.value;
   }
 
-  public getOrElseValue(defaultValue: A) {
+  public getOrElseValue(_defaultValue: A) {
     return this.value;
   }
 
@@ -22,7 +22,7 @@ export class Just<A> extends Maybe<A> {
     return fn(this.value);
   }
 
-  public orElse(fn: () => Maybe<A>): Maybe<A> {
+  public orElse(_fn: () => Maybe<A>): Maybe<A> {
     return this;
   }
 
@@ -46,8 +46,16 @@ export class Just<A> extends Maybe<A> {
     return new Just<A>(this.value);
   }
 
-  public elseDo(fn: () => void): Maybe<A> {
+  public elseDo(_fn: () => void): Maybe<A> {
     return this;
+  }
+
+  public isJust(): boolean {
+    return true;
+  }
+
+  public isNothing(): boolean {
+    return false;
   }
 }
 
