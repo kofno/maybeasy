@@ -1,6 +1,6 @@
 import { assertObjectMatch } from "https://deno.land/std@0.208.0/assert/assert_object_match.ts";
 import { assert, assertEquals } from "https://deno.land/std@0.208.0/assert/mod.ts";
-import { isJust, just } from "./index.ts";
+import { andThen, isJust, just, map } from "./index.ts";
 
 Deno.test('Just.getOrElse', () => {
   const result = just('foo');
@@ -59,4 +59,19 @@ Deno.test('Just.elseDo', () => {
       Just: x => assert(true, `All is well: ${JSON.stringify(x)}`),
       Nothing: () => assert(false, 'Should have a value')
     });
+});
+
+Deno.test('map(Just)', () => {
+  const foo = just(1);
+  const add1 = (n: number) => n + 1;
+
+  map(add1, foo).do(x => assertEquals(2, x)).elseDo(() => assert(false, 'Should have a value'));
+  map(add1)(foo).do(x => assertEquals(2, x)).elseDo(() => assert(false, 'Should have a value'));
+});
+
+Deno.test('andThen(Just)', () => {
+  const foo = just(1);
+  const bar = (n: number) => just(n + 1);
+
+  andThen(bar, foo).do(x => assertEquals(2, x)).elseDo(() => assert(false, 'Should have a value'));
 });
