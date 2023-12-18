@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.208.0/assert/assert_equals.ts";
 import { assert } from "https://deno.land/std@0.208.0/assert/mod.ts";
-import { isNothing, just, nothing } from "./index.ts";
+import { andThen, isNothing, just, map, nothing } from "./index.ts";
 
 Deno.test('Nothing.getOrElse', () => {
   const result = nothing<string>().getOrElse(() => 'foo');
@@ -47,4 +47,20 @@ Deno.test('Nothing.elseDo', () => {
       Just: x => assert(false, `Should not have a value: ${JSON.stringify(x)}`),
       Nothing: () => assert(true, 'Nothing, as expected')
     });
+});
+
+Deno.test('map(Nothing)', () => {
+  const foo = nothing<number>();
+
+  map(n => n + 1, foo)
+    .do(_ => assert(false, 'Should not have a value'))
+    .elseDo(() => assert(true, 'Should be nothing'));
+});
+
+Deno.test('andThen(Nothing)', () => {
+  const foo = nothing<number>();
+
+  andThen(n => just(n + 1), foo)
+    .do(_ => assert(false, 'Should not have a value'))
+    .elseDo(() => assert(true, 'Should be nothing'));
 });

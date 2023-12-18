@@ -48,6 +48,47 @@ export function isJust(maybe: Maybe<unknown>): boolean { return maybe.isJust() }
 export function isNothing(maybe: Maybe<unknown>): boolean { return maybe.isNothing() }
 
 /**
+ * Applies the function to the value of the maybe if it is a Just, otherwise returns the Nothing
+ * @overload
+ * @param fn the function to apply to the value of the maybe
+ * @returns a function that takes a maybe and returns a new maybe with the result of the function applied to the value
+ */
+export function map<T, U>(fn: (x: T) => U, maybe: Maybe<T>): Maybe<U>;
+/**
+ * Applies the function to the value of the maybe if it is a Just, otherwise returns the Nothing
+ * This is a curried function that allows you to chain together a series of operations using pipe or compose.
+ * @overload
+ * @param fn the function to apply to the value of the maybe
+ * @param maybe a maybe to apply the function to
+ * @returns a new maybe with the result of the function applied to the value
+ */
+export function map<T, U>(fn: (x: T) => U): (maybe: Maybe<T>) => Maybe<U>;
+export function map<T, U>(fn: (x: T) => U, maybe?: Maybe<T>) {
+  const doit = (maybe: Maybe<T>) => maybe.map(fn);
+  return typeof maybe === 'undefined' ? doit : doit(maybe);
+}
+
+/**
+ * Applies the function to the value of the maybe if it is a Just, otherwise returns the Nothing
+ * @overload
+ * @param fn a function that returns a maybe
+ * @param maybe a maybe to apply the function to
+ * @returns a new maybe with the result of the function applied to the value
+ */
+export function andThen<T, U>(fn: (x: T) => Maybe<U>, maybe: Maybe<T>): Maybe<U>;
+/**
+ * Applies the function to the value of the maybe if it is a Just, otherwise returns the Nothing
+ * This is a curried function that allows you to chain together a series of operations using pipe or compose.
+ * @param fn a function that returns a maybe
+ * @returns a function that takes a maybe and returns a new maybe with the result of the function applied to the value
+ */
+export function andThen<T, U>(fn: (x: T) => Maybe<U>): (maybe: Maybe<T>) => Maybe<U>;
+export function andThen<T, U>(fn: (x: T) => Maybe<U>, maybe?: Maybe<T>) {
+  const doit = (maybe: Maybe<T>) => maybe.andThen(fn);
+  return typeof maybe === 'undefined' ? doit : doit(maybe);
+}
+
+/**
  * Returns the value of the maybe if it is a Just, otherwise returns the
  * provided default value.
  */
