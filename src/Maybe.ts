@@ -4,7 +4,7 @@ import Catamorphism from './Catamorphism.ts';
  * Maybe describes a value that is optional. It is safer to use then null and
  * undefined.
  */
-abstract class Maybe<A> {
+export abstract class Maybe<A> {
   /**
    * Returns the maybe value if it is nonempty. Otherwise returns the result
    * of evaluating fn.
