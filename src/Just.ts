@@ -34,7 +34,7 @@ export class Just<A> extends Maybe<A> {
     k: K,
     other: Maybe<B> | ((a: A) => Maybe<B>)
   ): Maybe<A & { [k in K]: B }> {
-    const maybe = other instanceof Maybe ? other : other(this.value);
+    const maybe = typeof other === 'function' ? other(this.value) : other;
     return maybe.map<A & { [k in K]: B }>(b => ({
       ...Object(this.value),
       [k.toString()]: b
