@@ -1,180 +1,225 @@
-# maybeasy
+# Maybeasy: Embracing Optionality in TypeScript
 
-[![Build Status](https://travis-ci.org/kofno/maybeasy.svg?branch=master)](https://travis-ci.org/kofno/maybeasy)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=plastic)](https://github.com/semantic-release/semantic-release)
+`maybeasy` is a lightweight and powerful TypeScript library for working with optional values using the `Maybe` monad. It provides a type-safe and functional approach to handling situations where a value might be present (`Just`) or absent (`Nothing`), helping you avoid runtime errors and write more robust code.
 
-Whether we like it or not, not every computation in a program is going to
-return a value. Sometimes there's no value to return. Other times, something
-goes wrong and we're just not sure what value to return.
+## The Problem: The Perils of `null` and `undefined`
 
-In JavaScript we often will return null or undefined to represent the value
-of Nothing, however we arrive at that value. This can often lead to failures
-at runtime when we forget (or are unaware) that a value may be nothing.
-Strict null checking makes this situation tolerable in Typescript, if only by
-nagging you every place you need to check for Nothing.
+In JavaScript, `null` and `undefined` are often used to represent the absence of a value. However, this can lead to runtime errors when you forget to check for these values, resulting in the dreaded "Cannot read property 'x' of null" error.
 
-Arrays are less prone to these types of failures, because if when there is
-nothing, we return an empty array. We can safely apply functions to an array
-without being concerned if there are values present, because an empty array and
-a populated array have the same interface. Can that same principle be applied
-to singular values?
+TypeScript's strict null checking helps, but it can also lead to verbose and repetitive code as you're forced to check for `null` or `undefined` everywhere.
 
-Sure it can! The Maybe type offers a way to express that a value may be something,
-or it may be nothing. Our intuition for mapping over arrays is applicable here.
+## The Solution: The `Maybe` Monad
 
-## the functor (this map)
+`maybeasy` offers a better way: the `Maybe` type. A `Maybe` value can be in one of two states:
 
-Given a computation that may or may not return a value, we can apply logic to
-this value by mapping pure functions over the result of the computation. For
-example:
+- **`Just(value)`:** Represents the presence of a value.
+- **`Nothing()`:** Represents the absence of a value.
+
+By using `Maybe`, you can explicitly model optionality in your code and leverage a set of powerful functions to work with these values safely and elegantly.
+
+## Key Concepts
+
+### 1. The Functor: Mapping Over `Maybe`
+
+The `map` method allows you to apply a function to the value inside a `Maybe` if it's `Just`. If the `Maybe` is `Nothing`, `map` does nothing and returns `Nothing`.
 
 ```typescript
-const fetchSomething = (): Maybe<number> => ...; // <-- may or may not return something
+import { just, nothing, Maybe } from "maybeasy";
 
-const add2 = (n) => n + 2;
+const fetchSomething = (): Maybe<number> => {
+  // ... some computation that might return a number or nothing
+  return just(5);
+};
 
-fetchSomething().map(add2); //
+const add2 = (n: number) => n + 2;
+
+const result = fetchSomething().map(add2); // result is just(7)
+
+const result2 = nothing<number>().map(add2); // result2 is nothing()
 ```
 
-In this example, we add2 to the number that we fetched. But if the there is no
-number -- it's Nothing -- the result of add2 is... Nothing. We won't get a
-runtime error.
+### 2. Monadic Chaining: andThen
 
-## chaining (the flat map)
-
-Let's say that we have two computations. Both may return nothing, but one of the
-computations depends on the other.
+When you have a computation that depends on the result of another computation, and both might return Nothing, you need andThen. andThen is like map, but it expects the function to return a Maybe. This prevents nested Maybe values (Maybe<Maybe<T>>).
 
 ```typescript
-const fetchSomething = (): Maybe<number> => ...;
+import { just, nothing, Maybe } from "maybeasy";
 
-const fetchSomethingElse = (n: number): Maybe<string> => ...; // <-- also may or may not return something
+const fetchSomething = (): Maybe<number> => just(5);
+
+const fetchSomethingElse = (n: number): Maybe<string> => {
+  // ... some computation that might return a string or nothing
+  return just(`The number is ${n}`);
+};
+
+const result = fetchSomething().andThen(fetchSomethingElse); // result is just("The number is 5")
+
+const result2 = nothing<number>().andThen(fetchSomethingElse); // result2 is nothing()
+
+const result3 = just(5).andThen((n) => nothing<string>()); // result3 is nothing()
 ```
 
-We _could_ use a map here, as in this examples:
+### 3. Building Objects: `assign`
+
+The assign method helps you build up an object from a series of Maybe values. It's a cleaner alternative to deeply nested andThen calls.
 
 ```typescript
-fetchSomething().map(fetchSomethingElse);
+import { just, nothing } from "maybeasy";
+
+const fetchA = (): Maybe<number> => just(1);
+const fetchB = (): Maybe<string> => just("hello");
+const fetchC = (n: number): Maybe<number> => just(n + 10);
+
+const result = just({})
+  .assign("a", fetchA())
+  .assign("b", fetchB())
+  .assign("c", (scope) => fetchC(scope.a)); // result is just({ a: 1, b: "hello", c: 11 })
+
+const result2 = just({}).assign("a", nothing()).assign("b", fetchB()); // result2 is nothing()
 ```
 
-The problem with this is that we will end up a maybe nested inside another maybe.
-You intuition for Arrays applies here, too; if we map over an Array with a function
-that returns an Array, we end up with an Array of Arrays. That same thinking
-applies here; we'll end up with `Maybe<Maybe<string>>`.
+### 4. Unwrapping: getOrElse and getOrElseValue
 
-To chain computations that both may return nothing, we need a different tool:
-`andThen`. We can rewrite our previous example, but just replace `map` with
-`andThen`:
+At some point, you'll need to extract the value from a Maybe. getOrElse and getOrElseValue provide safe ways to do this, requiring you to provide a fallback value in case the Maybe is Nothing.
+
+- **getOrElseValue(defaultValue)**: Takes a default value of the same type as the Maybe.
+- **getOrElse(fn)**: Takes a function that returns a default value. This is useful when the default value is expensive to compute, as the function will only be called if the Maybe is Nothing.
 
 ```typescript
-fetchSomething().andThen(fetchSomethingElse);
+import { just, nothing } from "maybeasy";
+
+const maybeNumber = just(5);
+const number = maybeNumber.getOrElseValue(10); // number is 5
+
+const nothingMaybe = nothing<number>();
+const defaultNumber = nothingMaybe.getOrElse(() => {
+  // ... some expensive computation to get a default value
+  return 10;
+}); // defaultNumber is 10
 ```
 
-If either computation is Nothing, the result is nothing. If both computations
-succeed, then we have `Maybe<string>`.
+### 5. Filtering: `filter`
 
-## building an object
-
-A common pattern in javascript is build an object from a set of computations.
-When those computations may or may not return a value, it can be useful to
-chain them together using Maybe.
-
-Given our functions, you can chain them together using `andThen`. It looks like
-this:
+The filter method allows you to conditionally keep or discard a value within a Maybe chain based on a predicate function.
 
 ```typescript
-fetchSomething().andThen(a => fetchSomethingElse.andThen(b => just({ a, b })));
+import { just, nothing } from "maybeasy";
+
+const maybeNumber = just(5);
+const filteredMaybe = maybeNumber.filter((x) => x > 3); // filteredMaybe is just(5)
+
+const filteredMaybe2 = maybeNumber.filter((x) => x > 10); // filteredMaybe2 is nothing()
+
+const nothingMaybe = nothing<number>();
+const filteredNothing = nothingMaybe.filter((x) => x > 3); // filteredNothing is nothing()
 ```
 
-If the object is fairly complex, this nesting can be quite deep.
+### 6. Checking for Existence: `exists`
+
+The exists method allows you to check if a value within a Maybe meets a certain condition without unwrapping it.
 
 ```typescript
-fetchSomething()
-.andThen(a =>
-  fetchSomethingElse().andThen(b =>
-    fetchC().andThen(c =>
-      fetchD().andThen(d =>
-        fetchE().andThen(e =>
-          ({ a, b, c, d, e })
-        )
-       )
-      )
-    );
+import { just, nothing } from "maybeasy";
+
+const maybeNumber = just(5);
+const exists = maybeNumber.exists((x) => x > 3); // exists is true
+
+const exists2 = maybeNumber.exists((x) => x > 10); // exists2 is false
+
+const nothingMaybe = nothing<number>();
+const exists3 = nothingMaybe.exists((x) => x > 3); // exists3 is false
 ```
 
-This is barely distinguishable from callback hell. The `assign` method helps
-flatten this out by allowing us to build an object incrementally. Here's the
-last code example using `assign`:
+### 7. Applying Functions: ap
+
+The ap method allows you to apply a Maybe containing a function to a Maybe containing a value. This is useful for working with functions that take multiple arguments, where each argument might be optional.
 
 ```typescript
-just({})
-  .assign('a', fetchSomething())
-  .assign('b', fetchSomethingElse())
-  .assign('c', fetchC())
-  .assign('d', fetchD())
-  .assign('e', fetchE());
+import { just, nothing, Maybe } from "maybeasy";
+
+const maybeAdd: Maybe<(x: number) => number> = just((x: number) => x + 1);
+const maybeNumber: Maybe<number> = just(5);
+const result: Maybe<number> = maybeNumber.ap(maybeAdd); // result is just(6)
+
+const nothingMaybe: Maybe<(x: number) => number> = nothing();
+const result2: Maybe<number> = maybeNumber.ap(nothingMaybe); // result2 is nothing()
+
+const nothingMaybe2: Maybe<number> = nothing();
+const result3: Maybe<number> = nothingMaybe2.ap(maybeAdd); // result3 is nothing()
 ```
 
-`assign` also accepts a function that returns a Maybe value as the second argument.
-Use this when you need to calculate one value of the object, based on a previously
-calculated value. For example:
+### 8. Working with Collections: `sequence` and `traverse`
+
+- **sequence**: Takes an array of Maybe<T> and returns a Maybe<T[]>. If all the Maybe values in the array are Just, it returns a Just containing an array of the unwrapped values. If any are Nothing, it returns Nothing.
+- **traverse**: Similar to sequence, but it takes an array of values and a function that maps each value to a Maybe. It then returns a Maybe containing an array of the unwrapped values (if all were Just) or Nothing (if any were Nothing).
 
 ```typescript
-just({})
-  .assign('a', just(8))
-  .assign('b', scope => just(scope.a + 42)); // --> Just { a: 8, b: 50 }
+import { just, nothing, sequence, traverse, Maybe } from "maybeasy";
+
+const maybes: Maybe<number>[] = [just(1), just(2), just(3)];
+const result: Maybe<number[]> = sequence(maybes); // result is just([1, 2, 3])
+
+const maybes2: Maybe<number>[] = [just(1), nothing(), just(3)];
+const result2: Maybe<number[]> = sequence(maybes2); // result2 is nothing()
+
+const numbers: number[] = [1, 2, 3];
+const result3: Maybe<string[]> = traverse((n) => just(n.toString()), numbers); // result3 is just(["1", "2", "3"])
+
+const numbers2: number[] = [1, 2, 3];
+const result4: Maybe<string[]> = traverse(
+  (n) => (n % 2 === 0 ? just(n.toString()) : nothing()),
+  numbers2
+); // result4 is nothing()
 ```
 
-## unwrapping the value
+### 9. Side Effects: `do` and `elseDo`
 
-At some point, we may need to send our result to another part of the system.
-The other part of the system may not understand Maybe values. Or possibly this
-value needs to be serialized as a string for sending to a third party. We need
-a safe way to _unwrap_ this value. For this purpose we have `getOrElse` and
-`getOrElseValue`.
-
-`getOrElse` and `getOrElseValue` will return the value if it is present (a Just),
-but also requires us to provide a default value, in the case that we have Nothing.
-`getOrElseValue` is strict and takes a value of the generic type of the Maybe.
-`getOrElse` is lazy. It takes a function that returns a type of the generic
-type of the Maybe. The function will only be evaluated if the Maybe is Nothing.
-Prefer usinf `getOrElse` if the default value is expensive to calculate.
-
-This makes _unwrapping_ the value safe.
-
-## putting it all together
-
-We can, of course, chain and map all we want to create a pipeline of data processors.
-At the end we can unwrap our value for consumption by humans or other systems.
-For example:
+- **do**: Inject a side-effectual operation into a chain of maybe operations. The side effect only runs when there is a value (Just).
+- **elseDo**: Inject a side-effectual operation into a chain of maybe operations. The side effect only runs when there is not a value (Nothing).
 
 ```typescript
-fetchSomething()
-  .map(add2)
-  .andThen(fetchSomethingElse)
-  .getOrElse('No data');
+import { just, nothing } from "maybeasy";
+
+just(5).do((x) => console.log(`The value is ${x}`)); // Logs "The value is 5"
+nothing().do((x) => console.log(`The value is ${x}`)); // Does not log anything
+
+nothing().elseDo(() => console.log("There is nothing here")); // Logs "There is nothing here"
+just(5).elseDo(() => console.log("There is nothing here")); // Does not log anything
 ```
 
-# install
+## Installation
 
-> npm install --save maybeasy
+```bash
+npm install maybeasy
+# or
+yarn add maybeasy
+```
 
-> yarn add maybeasy
-
-# usage
+## Usage
 
 ```typescript
-import { just, nothing } from 'maybeasy';
+import { just, nothing, Maybe } from "maybeasy";
 
-function parse(s) {
+function parse(s: string): Maybe<object> {
   try {
     return just(JSON.parse(s));
   } catch (e) {
     return nothing();
   }
 }
+
+const result = parse('{"key": "value"}')
+  .map((obj) => obj.key)
+  .getOrElseValue("default"); // result is "value"
+const result2 = parse("not json")
+  .map((obj) => obj.key)
+  .getOrElseValue("default"); // result2 is "default"
 ```
 
-# docs
+## Contributing
 
-[API](https://kofno.github.io/maybeasy)
+Contributions are welcome! Please feel free to open issues or submit pull requests.
+
+## License
+
+MIT
