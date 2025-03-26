@@ -1,6 +1,6 @@
 {
   "name": "maybeasy",
-  "version": "7.0.0-pre.0",
+  "version": "7.0.1",
   "description": "A simple, lightweight, and easy-to-use library for handling optional values in JavaScript.",
   "main": "dist/maybeasy.js",
   "license": "MIT",
@@ -31,5 +31,8 @@
       "import": "./dist/maybeasy.js",
       "require": "./dist/maybeasy.cjs"
     }
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
