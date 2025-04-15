@@ -1,18 +1,18 @@
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import {
-  fromNullable,
+  andThen,
+  cata,
   fromEmpty,
+  fromNullable,
+  getOrElse,
+  getOrElseValue,
   isJust,
   isNothing,
   map,
-  andThen,
-  getOrElseValue,
-  getOrElse,
-  cata,
-  traverse,
   sequence,
+  traverse,
 } from "../src/functions";
-import Maybe, { just, nothing, maybe } from "../src/Maybe";
+import Maybe, { just, nothing } from "../src/Maybe";
 
 describe("functions", () => {
   describe("fromNullable", () => {

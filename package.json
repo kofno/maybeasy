@@ -34,5 +34,12 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "prettier": {
+    "singleQuote": true,
+    "semi": true,
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "printWidth": 80
+  }
 }

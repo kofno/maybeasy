@@ -1,20 +1,27 @@
 // src/index.ts
 
 // Re-export Maybe and its related functions
-export { default as Maybe, just, nothing, maybe } from "./Maybe";
+export { just, default as Maybe, maybe, nothing } from './Maybe';
 
 // Re-export functions from functions.ts
 export {
-  fromNullable,
+  andThen,
+  ap,
+  cata,
+  Emptyable,
+  exists,
+  filter,
   fromEmpty,
+  fromNullable,
+  getOrElse,
+  getOrElseValue,
   isJust,
   isNothing,
   map,
-  andThen,
-  getOrElseValue,
-  getOrElse,
-  cata,
-} from "./functions";
+  Nullable,
+  sequence,
+  traverse,
+} from './functions';
 
 // Re-export Catamorphism type
-export type { default as Catamorphism } from "./Catamorphism";
+export type { default as Catamorphism } from './Catamorphism';
